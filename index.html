@@ -14,6 +14,7 @@
             color: #ffffff;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         /* Custom font approximation for Reformat LL */
         .reformat-ll {
@@ -22,6 +23,43 @@
         }
         input[type=range] {
             accent-color: #ffffff;
+        }
+
+        @keyframes fly-back-forth {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(40px, -30px) rotate(15deg); }
+            50% { transform: translate(-20px, 50px) rotate(-10deg); }
+            75% { transform: translate(-50px, -20px) rotate(20deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bg-pulse {
+            0% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+            100% { opacity: 0.4; transform: scale(1); }
+        }
+
+        .animate-fly {
+            animation: fly-back-forth 12s ease-in-out infinite;
+        }
+
+        .animate-fade-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(230,0,77,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bg-pulse 8s ease-in-out infinite;
         }
     </style>
 <script type="importmap">

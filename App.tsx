@@ -20,9 +20,9 @@ const MezoLogo = ({ className }: { className?: string }) => (
   </div>
 );
 
-const FloatingToken = ({ style }: { style: React.CSSProperties }) => (
-  <div className="absolute pointer-events-none opacity-20" style={style}>
-    <div className="w-24 h-24 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center rotate-12">
+const FloatingToken = ({ style, delay = "0s", duration = "12s" }: { style: React.CSSProperties, delay?: string, duration?: string }) => (
+  <div className="absolute pointer-events-none opacity-30 animate-fly" style={{ ...style, animationDelay: delay, animationDuration: duration }}>
+    <div className="w-24 h-24 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center shadow-lg">
        <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" className="w-12 h-12">
         <path d="M4 12c2-4 4-4 6 0s4 4 6 0 2-4 4-4" />
       </svg>
@@ -57,11 +57,17 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#e6004d] text-white relative overflow-hidden flex flex-col reformat-ll">
-      {/* Background Elements from landing page image */}
-      <div className="absolute inset-0 z-0">
-        <FloatingToken style={{ top: '10%', right: '5%', transform: 'rotate(-15deg)' }} />
-        <FloatingToken style={{ bottom: '20%', left: '-5%', transform: 'scale(1.5) rotate(20deg)' }} />
-        <FloatingToken style={{ bottom: '5%', right: '15%', transform: 'rotate(-10deg)' }} />
+      {/* Background Animated Elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="bg-glow top-[-10%] left-[-10%]" />
+        <div className="bg-glow bottom-[-20%] right-[-10%] animation-delay-4000" style={{ animationDelay: '4s' }} />
+        
+        {/* Animated Tokens flying around */}
+        <FloatingToken style={{ top: '15%', right: '10%' }} delay="0s" duration="15s" />
+        <FloatingToken style={{ bottom: '25%', left: '5%' }} delay="-3s" duration="18s" />
+        <FloatingToken style={{ top: '60%', right: '20%' }} delay="-7s" duration="14s" />
+        <FloatingToken style={{ top: '5%', left: '30%', transform: 'scale(0.6)' }} delay="-10s" duration="20s" />
+        <FloatingToken style={{ bottom: '10%', right: '45%', transform: 'scale(0.8)' }} delay="-5s" duration="16s" />
       </div>
 
       {/* Nav */}
@@ -81,7 +87,7 @@ const App: React.FC = () => {
         <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
           {/* Hero Text */}
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-up">
             <h1 className="text-6xl md:text-7xl font-black leading-[0.95] tracking-tight">
               Estimate your<br />
               Mezo allocation.
@@ -92,7 +98,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Calculator Card */}
-          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[2rem] shadow-2xl space-y-8">
+          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[2rem] shadow-2xl space-y-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
             
             {/* User Token Input */}
             <div className="space-y-4">
