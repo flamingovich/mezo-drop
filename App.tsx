@@ -1,29 +1,24 @@
 
 import React, { useState, useMemo } from 'react';
 import { 
-  Plus, 
-  Minus, 
-  TrendingUp, 
-  Info,
   DollarSign,
   Coins
 } from 'lucide-react';
 import { INITIAL_PARAMS, TOTAL_SUPPLY } from './constants';
 import { MezoParams, EstimationResults } from './types';
 
-// Custom Mezo Logo Component mimicking the wavy pill icon
 const MezoLogo = ({ className }: { className?: string }) => (
   <div className={`relative flex items-center justify-center bg-white rounded-full ${className}`}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="#e6004d" strokeWidth="4" strokeLinecap="round" className="w-1/2 h-1/2">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#9e1a44" strokeWidth="4" strokeLinecap="round" className="w-1/2 h-1/2">
       <path d="M4 12c2-4 4-4 6 0s4 4 6 0 2-4 4-4" />
     </svg>
   </div>
 );
 
-const FloatingToken = ({ style, delay = "0s", duration = "12s" }: { style: React.CSSProperties, delay?: string, duration?: string }) => (
-  <div className="absolute pointer-events-none opacity-30 animate-fly" style={{ ...style, animationDelay: delay, animationDuration: duration }}>
-    <div className="w-24 h-24 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center shadow-lg">
-       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" className="w-12 h-12">
+const FloatingToken = ({ style, delay = "0s", duration = "15s" }: { style: React.CSSProperties, delay?: string, duration?: string }) => (
+  <div className="absolute pointer-events-none animate-fly" style={{ ...style, animationDelay: delay, animationDuration: duration }}>
+    <div className="w-20 h-20 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl">
+       <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" className="w-10 h-10 opacity-60">
         <path d="M4 12c2-4 4-4 6 0s4 4 6 0 2-4 4-4" />
       </svg>
     </div>
@@ -45,7 +40,6 @@ const App: React.FC = () => {
     };
   }, [params]);
 
-  // Helper for formatting according to the user's request (1 000 000,00)
   const formatNum = (num: number, decimals: number = 2) => {
     return num.toLocaleString('ru-RU', {
       minimumFractionDigits: decimals,
@@ -58,129 +52,124 @@ const App: React.FC = () => {
   };
 
   const handleInputChange = (field: keyof MezoParams, value: string) => {
-    // If it's an empty string, allow it so the user can clear the input
     if (value === "") {
       setParams(prev => ({ ...prev, [field]: "" }));
       return;
     }
-    
-    // Otherwise, parse it as a number but keep it as a string if we want to avoid 
-    // leading zeros in the input value while typing.
-    // However, keeping it as the raw value from the input is best for UX.
     setParams(prev => ({ ...prev, [field]: value }));
   };
 
   return (
-    <div className="min-h-screen bg-[#e6004d] text-white relative overflow-hidden flex flex-col reformat-ll">
-      {/* Background Animated Elements */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="bg-glow top-[-10%] left-[-10%]" />
-        <div className="bg-glow bottom-[-20%] right-[-10%] animation-delay-4000" style={{ animationDelay: '4s' }} />
+    <div className="min-h-screen bg-[#1a050c] text-white relative overflow-hidden flex flex-col reformat-ll">
+      {/* Liquid Background Blobs */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="liquid-blob w-[500px] h-[500px] bg-[#9e1a44] -top-48 -left-24" />
+        <div className="liquid-blob w-[600px] h-[600px] bg-[#4a1028] bottom-[-100px] right-[-100px]" style={{ animationDelay: '-5s' }} />
+        <div className="liquid-blob w-[400px] h-[400px] bg-[#e6004d] top-[30%] right-[10%] opacity-20" style={{ animationDelay: '-10s' }} />
         
-        {/* Animated Tokens flying around */}
-        <FloatingToken style={{ top: '15%', right: '10%' }} delay="0s" duration="15s" />
-        <FloatingToken style={{ bottom: '25%', left: '5%' }} delay="-3s" duration="18s" />
-        <FloatingToken style={{ top: '60%', right: '20%' }} delay="-7s" duration="14s" />
-        <FloatingToken style={{ top: '5%', left: '30%', transform: 'scale(0.6)' }} delay="-10s" duration="20s" />
-        <FloatingToken style={{ bottom: '10%', right: '45%', transform: 'scale(0.8)' }} delay="-5s" duration="16s" />
+        <FloatingToken style={{ top: '15%', right: '12%' }} delay="0s" duration="20s" />
+        <FloatingToken style={{ bottom: '20%', left: '8%' }} delay="-4s" duration="25s" />
+        <FloatingToken style={{ top: '65%', right: '18%' }} delay="-8s" duration="22s" />
       </div>
 
-      {/* Nav */}
-      <nav className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <MezoLogo className="w-8 h-8" />
-          <span className="text-2xl font-black tracking-tighter">Mezo</span>
+      <nav className="relative z-10 max-w-7xl mx-auto w-full px-8 py-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <MezoLogo className="w-10 h-10 shadow-lg" />
+          <span className="text-2xl font-black tracking-tighter opacity-90">Mezo</span>
         </div>
-        <div className="hidden md:flex gap-8 text-sm font-bold">
-          <a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Why Mezo?</a>
-          <a href="#" className="opacity-80 hover:opacity-100 transition-opacity">Participate</a>
-          <a href="#" className="opacity-80 hover:opacity-100 transition-opacity">FAQs</a>
+        <div className="hidden md:flex gap-10 text-[11px] font-black uppercase tracking-[0.2em] opacity-40">
+          <a href="#" className="hover:opacity-100 transition-opacity">Protocol</a>
+          <a href="#" className="hover:opacity-100 transition-opacity">Ecosystem</a>
+          <a href="#" className="hover:opacity-100 transition-opacity">Docs</a>
         </div>
       </nav>
 
       <main className="relative z-10 flex-1 flex items-center justify-center px-6 py-12">
-        <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           
-          {/* Hero Text */}
-          <div className="space-y-6 animate-fade-up">
-            <h1 className="text-6xl md:text-7xl font-black leading-[0.95] tracking-tight">
-              Estimate your<br />
-              Mezo allocation.
+          <div className="space-y-8 animate-fade-up">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest opacity-60">
+              Community Rewards Estimator
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40">
+              Calculate<br />Your Rewards.
             </h1>
-            <p className="text-xl opacity-90 max-w-md font-medium leading-relaxed">
-              Based on a total supply of 1 billion Mezo Mats. Enter your token count and expected FDV to calculate your rewards.
+            <p className="text-lg opacity-50 max-w-md font-medium leading-relaxed">
+              Analyze your Mezo Mats allocation based on projected market performance. 1B total supply protocol design.
             </p>
           </div>
 
-          {/* Calculator Card */}
-          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[2rem] shadow-2xl space-y-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+          <div className="liquid-glass p-10 rounded-[2.5rem] shadow-2xl space-y-10 animate-fade-up" style={{ animationDelay: '0.3s' }}>
             
-            {/* User Token Input */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-end">
-                <label className="text-xs font-black uppercase tracking-widest opacity-70">Your Mezo Mats Tokens</label>
-                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">{formatNum(Number(params.userTokens) || 0, 0)}</span>
+            <div className="space-y-5">
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Mezo Mats Holding</label>
+                <div className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-bold text-white/60">
+                  {formatNum(Number(params.userTokens) || 0, 0)}
+                </div>
               </div>
-              <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
-                <Coins className="w-5 h-5 opacity-60" />
+              <div className="flex items-center gap-5 bg-black/20 border border-white/5 rounded-3xl px-6 py-5 focus-within:border-white/20 transition-all">
+                <Coins className="w-6 h-6 opacity-30" />
                 <input 
                   type="number"
                   value={params.userTokens}
                   onChange={(e) => handleInputChange('userTokens', e.target.value)}
-                  className="bg-transparent border-none outline-none flex-1 text-2xl font-black text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="bg-transparent border-none outline-none flex-1 text-3xl font-black text-white placeholder:opacity-20"
                   placeholder="0"
                 />
               </div>
             </div>
 
-            {/* FDV Input */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-end">
-                <label className="text-xs font-black uppercase tracking-widest opacity-70">Expected FDV (Target Market Cap)</label>
-                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">${formatNum(Number(params.expectedMarketCap) || 0, 0)}</span>
+            <div className="space-y-5">
+              <div className="flex justify-between items-center">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Expected FDV (Market Cap)</label>
+                <div className="px-3 py-1 rounded-lg bg-white/5 text-[10px] font-bold text-white/60">
+                  ${formatNum(Number(params.expectedMarketCap) || 0, 0)}
+                </div>
               </div>
-              <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
-                <DollarSign className="w-5 h-5 opacity-60" />
+              <div className="flex items-center gap-5 bg-black/20 border border-white/5 rounded-3xl px-6 py-5 focus-within:border-white/20 transition-all">
+                <DollarSign className="w-6 h-6 opacity-30" />
                 <input 
                   type="number"
                   value={params.expectedMarketCap}
                   onChange={(e) => handleInputChange('expectedMarketCap', e.target.value)}
-                  className="bg-transparent border-none outline-none flex-1 text-2xl font-black text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="bg-transparent border-none outline-none flex-1 text-3xl font-black text-white placeholder:opacity-20"
                   placeholder="100 000 000"
                 />
               </div>
-              <input 
-                type="range"
-                min="10000000"
-                max="300000000"
-                step="1000000"
-                value={Number(params.expectedMarketCap) || 10000000}
-                onChange={(e) => handleInputChange('expectedMarketCap', e.target.value)}
-                className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
-              />
-              <div className="flex justify-between text-[8px] font-black uppercase tracking-widest opacity-40">
-                <span>10M</span>
-                <span>300M</span>
+              <div className="px-2">
+                <input 
+                  type="range"
+                  min="10000000"
+                  max="300000000"
+                  step="1000000"
+                  value={Number(params.expectedMarketCap) || 10000000}
+                  onChange={(e) => handleInputChange('expectedMarketCap', e.target.value)}
+                  className="w-full appearance-none bg-white/10 rounded-full h-1"
+                />
+                <div className="flex justify-between text-[9px] font-black uppercase tracking-widest opacity-20 mt-4">
+                  <span>$10M FDV</span>
+                  <span>$300M FDV</span>
+                </div>
               </div>
             </div>
 
-            {/* Results Area */}
-            <div className="pt-8 border-t border-white/10 space-y-6">
-              <div className="text-center">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-2">Estimated Value</p>
-                <div className="text-6xl font-black tracking-tighter">
+            <div className="pt-10 border-t border-white/5 space-y-8">
+              <div className="text-center group">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-30 mb-3 group-hover:opacity-50 transition-opacity">Projected Allocation Value</p>
+                <div className="text-7xl font-black tracking-tighter tabular-nums drop-shadow-sm">
                   ${formatNum(results.estimatedValueUsd)}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <p className="text-[9px] font-black uppercase opacity-50 mb-1">Price Per Token</p>
-                  <p className="text-lg font-black">${formatNum(results.tokenPriceAtMcap, 4)}</p>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-black/20 rounded-3xl p-6 border border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-2">Token Price</p>
+                  <p className="text-xl font-black tracking-tight">${formatNum(results.tokenPriceAtMcap, 4)}</p>
                 </div>
-                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <p className="text-[9px] font-black uppercase opacity-50 mb-1">Network Supply</p>
-                  <p className="text-lg font-black">{formatSimple(1000000000 / 1000000000)}.0B</p>
+                <div className="bg-black/20 rounded-3xl p-6 border border-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest opacity-30 mb-2">Mats Supply</p>
+                  <p className="text-xl font-black tracking-tight">{formatSimple(1000000000 / 1000000000)}.0B</p>
                 </div>
               </div>
             </div>
@@ -189,13 +178,13 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="relative z-10 py-12 px-6 flex flex-col md:flex-row items-center justify-between border-t border-white/10 bg-[#e6004d]">
-        <div className="flex items-center gap-2 mb-4 md:mb-0 opacity-80">
-          <MezoLogo className="w-5 h-5" />
-          <span className="text-xs font-bold uppercase tracking-widest">Mezo Mats Protocol</span>
+      <footer className="relative z-10 py-10 px-8 flex flex-col md:flex-row items-center justify-between border-t border-white/5">
+        <div className="flex items-center gap-3 mb-6 md:mb-0 opacity-40 hover:opacity-100 transition-opacity">
+          <MezoLogo className="w-6 h-6 grayscale" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Mezo Mats Protocol</span>
         </div>
-        <div className="text-[10px] font-bold uppercase tracking-widest opacity-50">
-          © 2024 Mezo. All rights reserved.
+        <div className="text-[9px] font-bold uppercase tracking-[0.3em] opacity-20">
+          SECURE • DECENTRALIZED • 2024
         </div>
       </footer>
     </div>
