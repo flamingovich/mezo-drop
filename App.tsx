@@ -34,8 +34,10 @@ const App: React.FC = () => {
   const [params, setParams] = useState<MezoParams>(INITIAL_PARAMS);
 
   const results: EstimationResults = useMemo(() => {
-    const tokenPriceAtMcap = params.expectedMarketCap / TOTAL_SUPPLY;
-    const estimatedValueUsd = params.userTokens * tokenPriceAtMcap;
+    const mcap = Number(params.expectedMarketCap) || 0;
+    const tokens = Number(params.userTokens) || 0;
+    const tokenPriceAtMcap = mcap / TOTAL_SUPPLY;
+    const estimatedValueUsd = tokens * tokenPriceAtMcap;
 
     return {
       estimatedValueUsd,
@@ -53,6 +55,19 @@ const App: React.FC = () => {
 
   const formatSimple = (num: number) => {
     return num.toLocaleString('ru-RU');
+  };
+
+  const handleInputChange = (field: keyof MezoParams, value: string) => {
+    // If it's an empty string, allow it so the user can clear the input
+    if (value === "") {
+      setParams(prev => ({ ...prev, [field]: "" }));
+      return;
+    }
+    
+    // Otherwise, parse it as a number but keep it as a string if we want to avoid 
+    // leading zeros in the input value while typing.
+    // However, keeping it as the raw value from the input is best for UX.
+    setParams(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -104,14 +119,14 @@ const App: React.FC = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <label className="text-xs font-black uppercase tracking-widest opacity-70">Your Mezo Mats Tokens</label>
-                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">{formatNum(params.userTokens, 0)}</span>
+                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">{formatNum(Number(params.userTokens) || 0, 0)}</span>
               </div>
               <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
                 <Coins className="w-5 h-5 opacity-60" />
                 <input 
                   type="number"
                   value={params.userTokens}
-                  onChange={(e) => setParams(prev => ({ ...prev, userTokens: Number(e.target.value) }))}
+                  onChange={(e) => handleInputChange('userTokens', e.target.value)}
                   className="bg-transparent border-none outline-none flex-1 text-2xl font-black text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                 />
@@ -122,14 +137,14 @@ const App: React.FC = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <label className="text-xs font-black uppercase tracking-widest opacity-70">Expected FDV (Target Market Cap)</label>
-                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">${formatNum(params.expectedMarketCap, 0)}</span>
+                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">${formatNum(Number(params.expectedMarketCap) || 0, 0)}</span>
               </div>
               <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
                 <DollarSign className="w-5 h-5 opacity-60" />
                 <input 
                   type="number"
                   value={params.expectedMarketCap}
-                  onChange={(e) => setParams(prev => ({ ...prev, expectedMarketCap: Number(e.target.value) }))}
+                  onChange={(e) => handleInputChange('expectedMarketCap', e.target.value)}
                   className="bg-transparent border-none outline-none flex-1 text-2xl font-black text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="100 000 000"
                 />
@@ -139,8 +154,8 @@ const App: React.FC = () => {
                 min="10000000"
                 max="300000000"
                 step="1000000"
-                value={params.expectedMarketCap}
-                onChange={(e) => setParams(prev => ({ ...prev, expectedMarketCap: Number(e.target.value) }))}
+                value={Number(params.expectedMarketCap) || 10000000}
+                onChange={(e) => handleInputChange('expectedMarketCap', e.target.value)}
                 className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-[8px] font-black uppercase tracking-widest opacity-40">

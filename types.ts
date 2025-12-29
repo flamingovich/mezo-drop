@@ -1,7 +1,7 @@
 
 export interface MezoParams {
-  userTokens: number;
-  expectedMarketCap: number;
+  userTokens: number | string;
+  expectedMarketCap: number | string;
 }
 
 export interface EstimationResults {
