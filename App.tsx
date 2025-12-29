@@ -43,6 +43,18 @@ const App: React.FC = () => {
     };
   }, [params]);
 
+  // Helper for formatting according to the user's request (1 000 000,00)
+  const formatNum = (num: number, decimals: number = 2) => {
+    return num.toLocaleString('ru-RU', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
+  };
+
+  const formatSimple = (num: number) => {
+    return num.toLocaleString('ru-RU');
+  };
+
   return (
     <div className="min-h-screen bg-[#e6004d] text-white relative overflow-hidden flex flex-col reformat-ll">
       {/* Background Elements from landing page image */}
@@ -84,7 +96,10 @@ const App: React.FC = () => {
             
             {/* User Token Input */}
             <div className="space-y-4">
-              <label className="text-xs font-black uppercase tracking-widest opacity-70">Your Mezo Mats Tokens</label>
+              <div className="flex justify-between items-end">
+                <label className="text-xs font-black uppercase tracking-widest opacity-70">Your Mezo Mats Tokens</label>
+                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">{formatNum(params.userTokens, 0)}</span>
+              </div>
               <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
                 <Coins className="w-5 h-5 opacity-60" />
                 <input 
@@ -99,7 +114,10 @@ const App: React.FC = () => {
 
             {/* FDV Input */}
             <div className="space-y-4">
-              <label className="text-xs font-black uppercase tracking-widest opacity-70">Expected FDV (Target Market Cap)</label>
+              <div className="flex justify-between items-end">
+                <label className="text-xs font-black uppercase tracking-widest opacity-70">Expected FDV (Target Market Cap)</label>
+                <span className="text-[10px] font-black bg-white/10 px-2 py-0.5 rounded text-white/80">${formatNum(params.expectedMarketCap, 0)}</span>
+              </div>
               <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-5 py-4 focus-within:border-white/50 transition-all">
                 <DollarSign className="w-5 h-5 opacity-60" />
                 <input 
@@ -107,18 +125,22 @@ const App: React.FC = () => {
                   value={params.expectedMarketCap}
                   onChange={(e) => setParams(prev => ({ ...prev, expectedMarketCap: Number(e.target.value) }))}
                   className="bg-transparent border-none outline-none flex-1 text-2xl font-black text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  placeholder="100,000,000"
+                  placeholder="100 000 000"
                 />
               </div>
               <input 
                 type="range"
-                min="1000000"
-                max="5000000000"
+                min="10000000"
+                max="300000000"
                 step="1000000"
                 value={params.expectedMarketCap}
                 onChange={(e) => setParams(prev => ({ ...prev, expectedMarketCap: Number(e.target.value) }))}
                 className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
               />
+              <div className="flex justify-between text-[8px] font-black uppercase tracking-widest opacity-40">
+                <span>10M</span>
+                <span>300M</span>
+              </div>
             </div>
 
             {/* Results Area */}
@@ -126,24 +148,20 @@ const App: React.FC = () => {
               <div className="text-center">
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-2">Estimated Value</p>
                 <div className="text-6xl font-black tracking-tighter">
-                  ${results.estimatedValueUsd.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                  ${formatNum(results.estimatedValueUsd)}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
                   <p className="text-[9px] font-black uppercase opacity-50 mb-1">Price Per Token</p>
-                  <p className="text-lg font-black">${results.tokenPriceAtMcap.toFixed(4)}</p>
+                  <p className="text-lg font-black">${formatNum(results.tokenPriceAtMcap, 4)}</p>
                 </div>
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
                   <p className="text-[9px] font-black uppercase opacity-50 mb-1">Network Supply</p>
-                  <p className="text-lg font-black">1.0B</p>
+                  <p className="text-lg font-black">{formatSimple(1000000000 / 1000000000)}.0B</p>
                 </div>
               </div>
-
-              <button className="w-full bg-white text-[#e6004d] py-5 rounded-full font-black text-lg hover:bg-slate-100 transition-colors shadow-lg active:scale-95 transform">
-                Participate in Airdrop
-              </button>
             </div>
 
           </div>
