@@ -1,0 +1,5 @@
+{
+  "name": "MATS Airdrop Estimator",
+  "description": "A high-fidelity calculator for estimating MATS token airdrop rewards based on total supply, pool allocation, and user participation metrics, featuring an AI Market Analyst.",
+  "requestFramePermissions": []
+}
